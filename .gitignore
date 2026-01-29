@@ -1,0 +1,19 @@
+# Ambientes Virtuais
+venv/
+.venv/
+Scripts/
+Lib/
+
+# Dependências do Frontend
+node_modules/
+dist/
+
+# Python cache e logs
+__pycache__/
+*.py[cod]
+
+# Arquivos de dados e sistema
+*.zip
+
+.DS_Store
+.env
