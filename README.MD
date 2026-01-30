@@ -12,19 +12,51 @@ Este projeto realiza o pipeline de dados (ETL) para extração, transformação 
 
 ## 🛠️ Decisões Técnicas (Trade-offs)
 
-### Estratégia de Processamento
-Optei pelo processamento **em memória (In-Memory)** utilizando Pandas, em vez de processamento em stream/chunks.
+### 1. Estratégia de Processamento
+Optei pelo processamento **em memória (In-Memory)** utilizando Pandas.
+**Justificativa:** O volume total dos arquivos trimestrais (aprox. 150MB) cabe confortavelmente na RAM (8GB+). O processamento em stream (chunks) adicionaria complexidade desnecessária para este volume, sendo reservado para escalas de Gigabytes.
 
-**Justificativa:**
-Após análise exploratória, verificou-se que o volume total dos arquivos CSV trimestrais (aprox. 150MB descompactados) é significativamente menor que a memória RAM disponível em ambientes de execução padrão (8GB+). A abordagem em memória permite:
-1. Maior velocidade de desenvolvimento.
-2. Código mais limpo e legível.
-3. Aproveitamento das otimizações vetoriais do Pandas.
+### 2. Validação de Dados (Item 2.1)
+**Desafio:** Como tratar registros financeiros com CNPJs matematicamente inválidos?
+- **Estratégia Escolhida:** *Flagging & Keeping* (Sinalizar e Manter).
+- **Implementação:** Foi criada uma flag `CNPJ_Valido` usando validação de Módulo 11.
+- **Justificativa:** Em auditorias contábeis, a integridade da soma financeira é prioritária. Um erro de digitação no cadastro do CNPJ não anula a existência da despesa monetária.
+- **Opção descartada:** Excluir os registros inválidos causaria divergência no balanço total das despesas.
 
-O processamento incremental (streaming) adicionaria complexidade desnecessária para este volume de dados, sendo uma estratégia reservada caso o dataset escalasse para a ordem de Gigabytes.
+### 3. Enriquecimento e Tratamento de Falhas (Item 2.2)
+**Desafio A: Join e Chaves Primárias**
+- **Estratégia:** `Left Join` utilizando o CNPJ padronizado (apenas números, 14 dígitos).
+- **Justificativa:** O `Left Join` (Financeiro -> Cadastral) garante que nenhuma despesa financeira seja perdida, mesmo que a operadora não seja encontrada na base cadastral (ex: operadoras extintas ou divergências).
+- **Registros sem Match:** Campos como `UF`, `Modalidade` e `RegistroANS` foram preenchidos com "N/D" para manter a estrutura tabular.
+
+**Desafio B: Duplicidade no Cadastro (Cadop)**
+- **Problema:** O arquivo do Cadop pode conter múltiplos registros históricos para o mesmo CNPJ.
+- **Estratégia:** Deduplicação prévia utilizando `drop_duplicates(subset=['CNPJ'], keep='last')`.
+- **Justificativa:** Realizar um join com uma base duplicada geraria um **Produto Cartesiano**, multiplicando erroneamente os valores das despesas. Manter o cadastro mais recente garante a unicidade.
+
+### 4. Agregação e Ordenação (Item 2.3)
+**Desafio: Performance vs. Legibilidade**
+- **Estratégia:** Ordenação descendente (`DESC`) pela coluna `Total_Despesas`.
+- **Justificativa:** Baseado no Princípio de Pareto (80/20). Ordenar pelo total permite identificar imediatamente os *big players* e *outliers* do mercado.
+
+## 📊 Arquivos Gerados (`data/processed/`)
+
+1.  **`consolidado.csv`**: Arquivo base contendo todas as despesas trimestrais, enriquecido com dados cadastrais (RegistroANS, Modalidade, UF).
+2.  **`demonstracoes_contabeis_consolidadas.zip`**: Versão compactada do consolidado (Entrega do Item 1).
+3.  **`despesas_agregadas.csv`**: Relatório analítico final com totais, média trimestral e desvio padrão por operadora (Entrega do Item 2).
+
+---
 
 ## 📦 Como Executar
 
-1. Instale as dependências:
+Certifique-se de ter o **Python 3.11.9** instalado (versão utilizada no desenvolvimento).
+
+1. **Crie um ambiente virtual (opcional, mas recomendado):**
+   ```bash
+   python -m venv .venv
+   source .venv/bin/activate  # Linux/Mac
+   .venv\Scripts\activate     # Windows
+   
+2. **Instale as dependências:**
    ```bash
    pip install -r requirements.txt
