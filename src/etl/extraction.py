@@ -6,7 +6,9 @@ from datetime import datetime, timedelta
  # Definições de constantes
 BASE_URL = 'https://dadosabertos.ans.gov.br/FTP/PDA/demonstracoes_contabeis/'
 PASTA_RAW = os.path.join('data', 'raw')
+URL_CADOP = 'https://dadosabertos.ans.gov.br/FTP/PDA/operadoras_de_plano_de_saude_ativas/Relatorio_cadop.csv'
 
+# Funções para extração de dados
 def obter_trimestres_recentes() -> list[str]:
     trimestres = []
 
@@ -23,7 +25,7 @@ def obter_trimestres_recentes() -> list[str]:
         data_ref -= timedelta(days=90)
 
     return sorted(trimestres)
-
+# Função para baixar e extrair arquivos ZIP da ANS
 def baixar_arquivos_ans(trimestres: list[str]) -> None:
     #Baixa e extrai os arquivos ZIP dos trimestres fornecidos
     if not os.path.exists(PASTA_RAW):
@@ -67,8 +69,30 @@ def baixar_arquivos_ans(trimestres: list[str]) -> None:
                 print('Dica: a ANS pode não ter disponibilizado o arquivo ainda.')
         except Exception as e:
             print(f'Erro crítico em {url}: {e}')
-    print("\n Processo finalizado.")
+
+
+# Função para baixar o cadastro de operadoras (CADOP)
+def baixar_cadastro_operadoras() -> None:
+    print('Baixando arquivo CADOP...')
+    nome_arquivo = 'Relatorio_cadop.csv'
+    caminho_arquivo = os.path.join(PASTA_RAW, nome_arquivo)
+
+    try:
+        response = requests.get(URL_CADOP, stream=True, timeout=60)
+
+        if response.status_code == 200:
+            with open(caminho_arquivo, 'wb') as f:
+                f.write(response.content)
+            print(f'Sucesso: Cadastro de Operadoras baixado {caminho_arquivo}')
+        else:
+            print(f'Erro {response.status_code} ao baixar o arquivo CADOP.')
+    except Exception as e:
+        print(f'Erro crítico ao baixar o arquivo CADOP: {e}')
+
 if __name__ == '__main__':
 
     lista_trimestres = obter_trimestres_recentes()
     baixar_arquivos_ans(lista_trimestres)
+    baixar_cadastro_operadoras()
+
+print('\nProcesso finalizado.')
