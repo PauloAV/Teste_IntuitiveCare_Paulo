@@ -1,20 +1,18 @@
-# Ambientes Virtuais
-venv/
 .venv/
-Scripts/
-Lib/
+venv/
+env/
 
-# Dependências do Frontend
-node_modules/
-dist/
 
-# Python cache e logs
 __pycache__/
-*.py[cod]
+*.pyc
 
-# Arquivos de dados e sistema
-data/
-*.zip
-*.csv
+
+.vscode/
 .DS_Store
-.env
+
+
+data/raw/
+
+
+*.zip
+
