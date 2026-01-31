@@ -15,4 +15,4 @@ data/raw/
 
 
 *.zip
-
+.env
