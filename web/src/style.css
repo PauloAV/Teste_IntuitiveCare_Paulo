@@ -1,0 +1,119 @@
+/* web/src/style.css */
+:root {
+  /* Paleta de Cores */
+  --primary-color: #2563eb;       /* Azul Vibrante */
+  --primary-hover: #1d4ed8;       /* Azul Escuro (Hover) */
+  --background-page: #f3f4f6;     /* Cinza muito claro (Fundo) */
+  --card-bg: #ffffff;             /* Branco (Cartões) */
+  --text-main: #1f2937;           /* Cinza Quase Preto (Texto) */
+  --text-muted: #6b7280;          /* Cinza Médio (Legendas) */
+  --border-color: #e5e7eb;        /* Borda Suave */
+  --success: #10b981;             /* Verde (Gráficos) */
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: var(--background-page);
+  color: var(--text-main);
+  -webkit-font-smoothing: antialiased;
+}
+
+#app {
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* Títulos */
+h1, h2, h3 {
+  color: #111827;
+  font-weight: 600;
+  margin-bottom: 0.5em;
+}
+
+/* Cartões */
+.card-box {
+  background: var(--card-bg);
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  padding: 24px;
+  margin-bottom: 24px;
+  border: 1px solid var(--border-color);
+}
+
+/* Botões Primários */
+button {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.95rem;
+  box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+}
+
+button:hover:not(:disabled) {
+  background-color: var(--primary-hover);
+  transform: translateY(-1px);
+}
+
+button:disabled {
+  background-color: #cbd5e1;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Inputs de Texto */
+input[type="text"] {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+  box-sizing: border-box; /* Inclui padding na largura total */
+}
+
+input[type="text"]:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* Tabelas Estilizadas */
+table {
+  width: 100%;
+  border-collapse: separate; /* Permite bordas arredondadas */
+  border-spacing: 0;
+  margin-top: 10px;
+}
+
+th {
+  background-color: #f8fafc;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-color);
+  text-align: left;
+}
+
+td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-main);
+  font-size: 0.95rem;
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+tr:hover td {
+  background-color: #f8fafc; /* Efeito hover na linha */
+}
