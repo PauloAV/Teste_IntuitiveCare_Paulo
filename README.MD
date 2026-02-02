@@ -148,13 +148,13 @@ Execute os scripts na ordem abaixo para baixar, tratar e carregar os dados:
    python src/etl/extraction.py
 
 2. **Transformação:** Limpa os dados e padroniza para UTF-8.
-```Bash
+    ```Bash
     python src/etl/transformation.py
 
 3. **Carga:** Cria o banco de dados e importa os dados processados.
-```Bash
+    ```Bash
     python src/etl/load.py
-    
+
 ### Passo 4: Iniciar a API
 1. Iniciar a API
 Suba o servidor de aplicação:
