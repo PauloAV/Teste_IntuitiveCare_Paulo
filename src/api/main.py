@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException, Query, Path
+from fastapi.middleware.cors import CORSMiddleware
 from src.api.database_utils import get_database_connection
 from typing import List, Optional
 from pydantic import BaseModel
@@ -8,6 +9,14 @@ app = FastAPI(
     title = 'API Intuitive Care',
     description='API de dados da ANS com paginação e Analytics',
     version='1.0.0'
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 # Definição dos modelos de dados
 class Endereco(BaseModel):
@@ -43,6 +52,7 @@ class EstatisticasGerais(BaseModel):
     total_despesas_geral: float
     media_despesas_trimestral: float
     top_5_maiores_despesas:List[TopOperadora]
+    distribuicao_uf: List[dict]
 
 class MetaData(BaseModel):
     total: int
@@ -189,11 +199,21 @@ def estatisticas_gerais():
     ''')
     top5 = cursor.fetchall()
 
+    # Distribuição por UF
+    cursor.execute('''
+                   SELECT uf, SUM(total_despesas) as total 
+                   FROM despesas_agregadas 
+                   GROUP BY uf 
+                   ORDER BY total DESC
+                   ''')
+    ufs = cursor.fetchall()
+
     cursor.close()
     conn.close()
 
     return {
         "total_despesas_geral": geral['total_despesas_geral'] or 0.0,
         "media_despesas_trimestral": geral['media_despesas_trimestral'] or 0.0,
-        "top_5_maiores_despesas": top5
+        "top_5_maiores_despesas": top5,
+        "distribuicao_uf": ufs 
     }
