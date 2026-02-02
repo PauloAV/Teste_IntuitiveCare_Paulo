@@ -9,7 +9,7 @@ Este projeto implementa uma solução completa (End-to-End) para análise de dad
 - **Margem de Segurança:** Lógica de "lag" (atraso) de 120 dias para respeitar o calendário de publicação da ANS.
 - **Resiliência:** Tratamento de erros de conexão e verificação de integridade (hash/tamanho) dos arquivos ZIP.
 
-### 2. Transformação e Enriquecimento (`src/etl/analysis/complete_analysis.py`)
+### 2. Transformação e Enriquecimento (`src/etl/transformation.py`)
 - **Limpeza:** Padronização de encoding (`Latin1` para `UTF-8`) e tratamento de separadores CSV.
 - **Enriquecimento:** Cruzamento de dados financeiros com dados cadastrais (Cadop) via CNPJ.
 - **Validação:** Verificação automática de integridade de CNPJ (Módulo 11).
@@ -140,12 +140,21 @@ Optei pelo processamento **em memória (In-Memory)** utilizando Pandas.
    DB_PASSWORD=sua_senha
    DB_NAME=intuitive_care_test
 
-### Passo 3: Criação do Banco de Dados
-1. Carga de Dados (ETL)
-Execute o script que cria as tabelas, limpa dados antigos e importa os novos:
-    ```Bash
-    python src/etl/load.py
+### Passo 3: Execução do Pipeline ETL
+Execute os scripts na ordem abaixo para baixar, tratar e carregar os dados:
 
+1. **Extração:** Baixa os arquivos brutos da ANS.
+   ```bash
+   python src/etl/extraction.py
+
+2. **Transformação:** Limpa os dados e padroniza para UTF-8.
+```Bash
+    python src/etl/transformation.py
+
+3. **Carga:** Cria o banco de dados e importa os dados processados.
+```Bash
+    python src/etl/load.py
+    
 ### Passo 4: Iniciar a API
 1. Iniciar a API
 Suba o servidor de aplicação:
