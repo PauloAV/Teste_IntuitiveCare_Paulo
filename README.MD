@@ -1,6 +1,6 @@
 # 🏥 Teste Técnico - Engenharia de Dados (ANS)
 
-Este projeto realiza o pipeline de dados (ETL) completo: extração, transformação, carregamento (Load) e análise de Demonstrações Contábeis das operadoras de planos de saúde, provenientes dos Dados Abertos da ANS.
+Este projeto implementa uma solução completa (End-to-End) para análise de dados financeiros de operadoras de planos de saúde. O pipeline abrange desde a extração automática de dados públicos da ANS (ETL), modelagem em banco de dados SQL e construção de API RESTful com FastAPI.
 
 ## 🚀 Funcionalidades
 
@@ -18,6 +18,12 @@ Este projeto realiza o pipeline de dados (ETL) completo: extração, transforma�
 - **Pipeline SQL:** Orquestração automática de scripts `.sql` numerados para garantir a ordem de execução (DDL -> DML -> DQL).
 - **Segurança:** Uso de variáveis de ambiente (`.env`) para ocultar credenciais do banco.
 - **Performance:** Utilização de `LOAD DATA LOCAL INFILE` para ingestão em massa (bulk load) de arquivos CSV.
+
+### 4. API e Backend (`src/api/main.py`)
+- **Alta Performance:** Construída com **FastAPI** (ASGI) para respostas assíncronas rápidas.
+- **Documentação Automática:** Integração nativa com Swagger UI e Redoc.
+- **Segurança de Tipos:** Validação de dados de entrada e saída via **Pydantic**.
+- **Features:** Paginação real (offset-based), filtros de busca e endpoints analíticos pré-calculados.
 
 ---
 
@@ -57,6 +63,30 @@ Optei pelo processamento **em memória (In-Memory)** utilizando Pandas.
     - **CTEs:** Melhoram a legibilidade e manutenção do código em comparação a subqueries aninhadas.
     - **Agregação:** Necessária para tratar casos onde uma operadora possui múltiplos lançamentos no mesmo trimestre, evitando distorções no ranking de crescimento.
 
+### 7. Framework da API (Backend) (Item 4.2.1)
+**Decisão:** FastAPI (vs Flask).
+- **Justificativa:**
+    1.  **Documentação:** Gera Swagger UI nativo (requisito implícito para testes de API).
+    2.  **Performance:** Suporte nativo a *async/await* para I/O de banco de dados.
+    3.  **Segurança de Tipos:** Previne erros de "NullPointer" e tipos incorretos comuns em APIs dinâmicas usando Pydantic.
+
+### 8. Estratégia de Paginação e Filtro (4.2.2)
+**Decisão:** Offset-based (`LIMIT` / `OFFSET`) e Server-side Filtering.
+- **Justificativa:**
+    - **Paginação:** Como os dados são históricos e fechados trimestralmente, não sofremos com "deslocamento de registros" (fantasmas). É a abordagem mais simples para navegação tabular.
+    - **Filtro:** Filtrar no servidor (`WHERE ... LIKE`) é mandatório para escalabilidade, evitando trafegar megabytes de JSON para o cliente.
+
+### 9. Otimização de Consultas (Cache vs Pré-cálculo) (4.2.3.)
+**Decisão:** Pré-cálculo em Tabela (Data Mart).
+- **Justificativa:** Como os dados da ANS têm baixa frequência de atualização (trimestral), o uso de Cache em Memória (Redis) traria complexidade desnecessária. A tabela `despesas_agregadas` criada no ETL funciona como um cache persistente e robusto.
+
+### 10. Estrutura de Resposta da API (Envelope vs Flat List)(4.2.4.)
+**Decisão:** Opção B - Resposta Envelopada (`{ data: [...], meta: {...} }`).
+- **Justificativa:**
+    - **Navegabilidade (UX):** Retornar apenas o array de dados (Opção A) impediria o Frontend de saber quantas páginas existem. O envelope com metadados (`total`, `total_pages`) é essencial para construir componentes de paginação completos (ex: "Página 1 de 50").
+    - **Extensibilidade:** O padrão envelopado permite adicionar novos campos de controle no futuro (como mensagens de aviso, status ou links HATEOAS) sem quebrar a estrutura de leitura do cliente, que espera os dados sempre dentro da chave `data`.
+    - **Padrão de Indústria:** Segue convenções modernas (como JSON:API), facilitando a integração por desenvolvedores terceiros.
+
 ---
 
 ## 📊 Arquivos Gerados (`data/processed/`)
@@ -83,3 +113,43 @@ Optei pelo processamento **em memória (In-Memory)** utilizando Pandas.
    source .venv/bin/activate
    
    pip install -r requirements.txt
+
+### Passo 2: Configuração do Banco de Dados
+2. Configure o arquivo `.env` na raiz com suas credenciais do MySQL:
+   ```ini
+   DB_HOST=localhost
+   DB_USER=root
+   DB_PASSWORD=sua_senha
+   DB_NAME=intuitive_care_test
+
+### Passo 3: Criação do Banco de Dados
+3. Carga de Dados (ETL)
+Execute o script que cria as tabelas, limpa dados antigos e importa os novos:
+    ```Bash
+    python src/etl/load.py
+
+### Passo 4: Iniciar a API
+4. Iniciar a API
+Suba o servidor de aplicação:
+    ```Bash
+    uvicorn src.api.main:app --reload
+    Acesse a documentação interativa em: http://127.0.0.1:8000/docs
+
+# 🚀 Testes e Documentação da API
+
+> ### Endpoints Principais
+| Método | Rota | Descrição |
+| :--- | :--- | :--- |
+| `GET` | `/api/operadoras` | Lista operadoras com paginação e busca por nome. |
+| `GET` | `/api/operadoras/{cnpj}` | Detalhes completos (incluindo Endereço via JOIN). |
+| `GET` | `/api/operadoras/{cnpj}/despesas` | Histórico financeiro detalhado (Trimestre a Trimestre). |
+| `GET` | `/api/estatisticas` | Dashboard: Total Geral, Média e Top 5 Operadoras. |
+
+### 📬 Postman Collection
+
+> [!TIP]
+> **Facilite seus testes!** Uma coleção completa foi incluída para validar a API rapidamente.
+> 
+> 1. Localize o arquivo `Intuitive_Care_API.json` na raiz do projeto.
+> 2. No Postman, clique em **Import** e selecione o arquivo.
+> 3. Use as requisições pré-configuradas para validar os endpoints automaticamente.
