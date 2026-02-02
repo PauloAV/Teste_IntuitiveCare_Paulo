@@ -1,7 +1,10 @@
 USE intuitive_care_test;
 SET GLOBAL local_infile = 1;
 
-
+SET FOREIGN_KEY_CHECKS = 0; -- Desativa verificação de chaves para poder limpar
+TRUNCATE TABLE despesas_detalhadas;
+TRUNCATE TABLE despesas_agregadas;
+SET FOREIGN_KEY_CHECKS = 1; -- Reativa verificação de chaves
 -- PREPARAÇÃO: Tabela Temporária
 
 DROP TEMPORARY TABLE IF EXISTS temp_cadop;
