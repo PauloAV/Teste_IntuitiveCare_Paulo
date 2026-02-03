@@ -177,7 +177,7 @@ O projeto possui uma interface moderna construída com Vue 3 e Vite.
    npm install
    npm run dev
 
-3. Acesse a aplicação no navegador: https://www.google.com/search?q=http://127.0.0.1:5173
+3. Acesse a aplicação no navegador: http://localhost:5173/
 ---
 
 ### Bloco da Galeria (Visual)
