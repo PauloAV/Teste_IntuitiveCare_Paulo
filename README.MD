@@ -151,7 +151,12 @@ Execute os scripts na ordem abaixo para baixar, tratar e carregar os dados:
     ```Bash
     python src/etl/transformation.py
 
-3. **Carga:** Cria o banco de dados e importa os dados processados.
+3. **Enriquecimento**: Validação de CNPJ e cálculo de estatísticas.
+
+    ```Bash
+    python src/etl/enrichment.py
+
+4. **Carga:** Cria o banco de dados e importa os dados processados.
     ```Bash
     python src/etl/load.py
 
