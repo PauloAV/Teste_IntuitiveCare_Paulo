@@ -190,11 +190,11 @@ O projeto possui uma interface moderna construída com Vue 3 e Vite.
 
 ### Dashboard Principal 
 Painel com gráfico de distribuição de despesas por UF e tabela interativa com busca server-side.
-![Dashboard](https://raw.githubusercontent.com//PauloAV/Teste_IntuitiveCare_Paulo/docs/img/dashboard.png))
+![Dashboard](https://raw.githubusercontent.com/PauloAV/Teste_IntuitiveCare_Paulo/docs/img/dashboard.png))
 
 ### Detalhes da Operadora
 Visualização detalhada contendo dados cadastrais e histórico financeiro trimestral.
-![Dashboard]https://github.com/PauloAV/Teste_IntuitiveCare_Paulo/blob/004b5b0a2026174e011c153046384878a747e42c/docs/img/detalhes.png)
+![Dashboard]https://github.com/PauloAV/Teste_IntuitiveCare_Paulo/main/blob/004b5b0a2026174e011c153046384878a747e42c/docs/img/detalhes.png)
 
 # 🚀 Testes e Documentação da API
 
