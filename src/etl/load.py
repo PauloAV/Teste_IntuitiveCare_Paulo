@@ -14,6 +14,12 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_ROOT = os.path.dirname(os.path.dirname(BASE_DIR))
 SQL_DIR = os.path.join(PROJECT_ROOT, "database")
 
+# Definição das pastas de dados
+RAW_DIR = os.path.join(PROJECT_ROOT, "data", "raw")
+PROCESSED_DIR = os.path.join(PROJECT_ROOT, "data", "processed")
+RAW_DIR_MYSQL = RAW_DIR.replace('\\', '/')
+PROCESSED_DIR_MYSQL = PROCESSED_DIR.replace('\\', '/')
+
 # Arquivos na ordem exata de execução
 SQL_FILES = [
     "01_ddl_estrutura.sql",
@@ -95,6 +101,18 @@ def execute_sql_file(cursor, filename):
     except UnicodeDecodeError:
         with open(filepath, 'r', encoding='latin1') as f:
             raw_content = f.read()
+    # Substitui os placeholders pelos caminhos reais calculados no início do script
+    if '{{CAMINHO_RAW}}' in raw_content:
+        print(f"   Injetando caminho RAW: {RAW_DIR_MYSQL}")
+        raw_content = raw_content.replace('{{CAMINHO_RAW}}', RAW_DIR_MYSQL)
+    
+    if '{{CAMINHO_PROCESSED}}' in raw_content:
+        print(f"   Injetando caminho PROCESSED: {PROCESSED_DIR_MYSQL}")
+        raw_content = raw_content.replace('{{CAMINHO_PROCESSED}}', PROCESSED_DIR_MYSQL)
+        
+    # Fallback: Se o SQL ainda usar o antigo {{CAMINHO}}, assume que é processed
+    if '{{CAMINHO}}' in raw_content:
+        raw_content = raw_content.replace('{{CAMINHO}}', PROCESSED_DIR_MYSQL)
 
     # Limpa comentários de linha inteira
     clean_content = clean_comments(raw_content)

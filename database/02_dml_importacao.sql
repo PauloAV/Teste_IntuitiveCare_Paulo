@@ -35,7 +35,7 @@ CREATE TEMPORARY TABLE temp_cadop (
 -- IMPORTAÇÃO DO CADOP (Correções Aplicadas)
 
 
-LOAD DATA LOCAL INFILE 'C:/Users/paulo/Documents/Teste_IntuitiveCare/data/raw/Relatorio_Cadop.csv'
+LOAD DATA LOCAL INFILE '{{CAMINHO_RAW}}/Relatorio_cadop.csv'
 INTO TABLE temp_cadop
 CHARACTER SET utf8mb4              
 FIELDS TERMINATED BY ';'
@@ -81,7 +81,7 @@ DROP TEMPORARY TABLE temp_cadop;
 
 -- IMPORTAÇÃO: Despesas (Consolidado)
 
-LOAD DATA LOCAL INFILE 'C:/Users/paulo/Documents/Teste_IntuitiveCare/data/processed/consolidado.csv'
+LOAD DATA LOCAL INFILE '{{CAMINHO_PROCESSED}}/consolidado.csv'
 INTO TABLE despesas_detalhadas
 CHARACTER SET utf8mb4             
 FIELDS TERMINATED BY ';'
@@ -95,7 +95,7 @@ SET
 
 
 -- IMPORTAÇÃO: Agregadas
-LOAD DATA LOCAL INFILE 'C:/Users/paulo/Documents/Teste_IntuitiveCare/data/processed/despesas_agregadas.csv'
+LOAD DATA LOCAL INFILE '{{CAMINHO_PROCESSED}}/despesas_agregadas.csv'
 INTO TABLE despesas_agregadas
 CHARACTER SET utf8mb4
 FIELDS TERMINATED BY ';'
