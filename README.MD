@@ -190,7 +190,7 @@ O projeto possui uma interface moderna construída com Vue 3 e Vite.
 
 ### Dashboard Principal
 Painel com gráfico de distribuição de despesas por UF e tabela interativa com busca server-side.
-![Dashboard](docs/img/dashboard.png)
+![Dashboard](https://github.com/user-attachments/assets/ffe47aa8-db9c-4947-a55f-7a24f55247ba)
 
 ### Detalhes da Operadora
 Visualização detalhada contendo dados cadastrais e histórico financeiro trimestral.
