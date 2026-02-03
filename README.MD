@@ -1,7 +1,5 @@
 # 🏥 Teste Técnico - Engenharia de Dados (ANS)
 
-Desenvolvido por Paulo Augusto de Jesus vilela
-
 Este projeto implementa uma solução completa (End-to-End) para análise de dados financeiros de operadoras de planos de saúde. O pipeline abrange desde a extração automática de dados públicos da ANS (ETL), modelagem em banco de dados SQL, construção de API RESTful com FastAPI e uma interface web interativa com Vue.js.
 
 ## 🚀 Funcionalidades
