@@ -180,22 +180,6 @@ O projeto possui uma interface moderna construída com Vue 3 e Vite.
 3. Acesse a aplicação no navegador: http://localhost:5173/
 ---
 
-### Bloco da Galeria (Visual)
-
-
-```markdown
----
-
-## 📸 Telas do Projeto
-
-### Dashboard Principal
-Painel com gráfico de distribuição de despesas por UF e tabela interativa com busca server-side.
-![Dashboard](https://github.com/user-attachments/assets/ffe47aa8-db9c-4947-a55f-7a24f55247ba)
-
-### Detalhes da Operadora
-Visualização detalhada contendo dados cadastrais e histórico financeiro trimestral.
-![Detalhes](docs/img/detalhes.png)
-
 # 🚀 Testes e Documentação da API
 
 > ### Endpoints Principais
@@ -209,7 +193,6 @@ Visualização detalhada contendo dados cadastrais e histórico financeiro trime
 ### 📬 Postman Collection
 
 > [!TIP]
-> **Facilite seus testes!** Uma coleção completa foi incluída para validar a API rapidamente.
 > 
 > 1. Localize o arquivo `Intuitive_Care_API.json` na raiz do projeto.
 > 2. No Postman, clique em **Import** e selecione o arquivo.
