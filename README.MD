@@ -107,12 +107,6 @@ Optei pelo processamento **em memória (In-Memory)** utilizando Pandas.
 - **Loading:** Feedback visual imediato (`v-if="loading"`) evita que o usuário veja dados desatualizados ou tabelas vazias durante a requisição.
 - **Erros:** Blocos `try/catch` no serviço capturam falhas de rede (500/404), alertando o usuário de forma simples, sem quebrar a aplicação.
 
-## 📊 Arquivos Gerados (`data/processed/`)
-
-1. **`consolidado.csv`**: Base completa de despesas enriquecida.
-2. **`despesas_agregadas.csv`**: Relatório analítico final (Totais, Média, Desvio Padrão).
-3. **`demonstracoes_contabeis_consolidadas.zip`**: Entrega final compactada.
-
 ---
 
 ## 📦 Como Executar
@@ -159,6 +153,12 @@ Execute os scripts na ordem abaixo para baixar, tratar e carregar os dados:
 4. **Carga:** Cria o banco de dados e importa os dados processados.
     ```Bash
     python src/etl/load.py
+
+## 📊 Arquivos Gerados (`data/processed/`)
+
+1. **`consolidado.csv`**: Base completa de despesas enriquecida.
+2. **`despesas_agregadas.csv`**: Relatório analítico final (Totais, Média, Desvio Padrão).
+3. **`demonstracoes_contabeis_consolidadas.zip`**: Entrega final compactada.
 
 ### Passo 4: Iniciar a API
 1. Iniciar a API
