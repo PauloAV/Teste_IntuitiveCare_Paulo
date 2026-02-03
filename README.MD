@@ -1,5 +1,7 @@
 # 🏥 Teste Técnico - Engenharia de Dados (ANS)
 
+Desenvolvido por Paulo Augusto de Jesus vilela
+
 Este projeto implementa uma solução completa (End-to-End) para análise de dados financeiros de operadoras de planos de saúde. O pipeline abrange desde a extração automática de dados públicos da ANS (ETL), modelagem em banco de dados SQL, construção de API RESTful com FastAPI e uma interface web interativa com Vue.js.
 
 ## 🚀 Funcionalidades
@@ -197,3 +199,12 @@ O projeto possui uma interface moderna construída com Vue 3 e Vite.
 > 1. Localize o arquivo `Intuitive_Care_API.json` na raiz do projeto.
 > 2. No Postman, clique em **Import** e selecione o arquivo.
 > 3. Use as requisições pré-configuradas para validar os endpoints automaticamente.
+
+---
+### 👨‍💻 Autor
+
+Desenvolvido por **Paulo Augusto de Jesus Vilela**.
+
+Entre em contato!
+* **LinkedIn:** https://www.linkedin.com/in/paulo-vilelaa/
+* **E-mail:** paulojesusvilela@gmail.com
