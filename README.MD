@@ -190,7 +190,7 @@ O projeto possui uma interface moderna construída com Vue 3 e Vite.
 
 ### Dashboard Principal 
 Painel com gráfico de distribuição de despesas por UF e tabela interativa com busca server-side.
-![Dashboard](docs/img/dashboard.png)
+![Dashboard](https://github.com/PauloAV/Teste_IntuitiveCare_Paulo/blob/main/docs/img/dashboard.png?raw=true)
 
 ### Detalhes da Operadora
 Visualização detalhada contendo dados cadastrais e histórico financeiro trimestral.
