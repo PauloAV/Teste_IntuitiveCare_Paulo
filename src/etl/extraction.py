@@ -7,7 +7,9 @@ from datetime import datetime, timedelta
 BASE_URL = 'https://dadosabertos.ans.gov.br/FTP/PDA/demonstracoes_contabeis/'
 PASTA_RAW = os.path.join('data', 'raw')
 URL_CADOP = 'https://dadosabertos.ans.gov.br/FTP/PDA/operadoras_de_plano_de_saude_ativas/Relatorio_cadop.csv'
-
+if not os.path.exists(PASTA_RAW):
+    print(f'[INFO] Pasta {PASTA_RAW} não existe. Criando...')
+    os.makedirs(PASTA_RAW)
 # Funções para extração de dados
 def obter_trimestres_recentes() -> list[str]:
     trimestres = []

@@ -8,7 +8,10 @@ PASTA_RAW = os.path.join('data', 'raw')
 PASTA_PROCESSED = os.path.join('data', 'processed')
 ARQUIVO_ZIP_FINAL = os.path.join(PASTA_PROCESSED, 'demonstracoes_contabeis_consolidadas.zip')
 CAMINHO_CADOP = os.path.join(PASTA_RAW, 'Relatorio_Cadop.csv')
+PASTA_PROCESSED = os.path.join('data', 'processed')
 
+if not os.path.exists(PASTA_PROCESSED):
+    os.makedirs(PASTA_PROCESSED)
 
 def carregar_cadop() -> None:
     if not os.path.exists(CAMINHO_CADOP):
