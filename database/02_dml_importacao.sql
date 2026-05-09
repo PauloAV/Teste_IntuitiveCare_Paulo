@@ -82,8 +82,12 @@ DROP TEMPORARY TABLE temp_cadop;
 
 -- IMPORTAÇÃO: Despesas (Consolidado)
 
+<<<<<<< HEAD
 -- MELHORIA: path dinâmico — '__DATA_PROCESSED__' é substituído pelo load.py com o caminho absoluto real do projeto
 LOAD DATA LOCAL INFILE '__DATA_PROCESSED__/consolidado.csv'
+=======
+LOAD DATA LOCAL INFILE '{{CAMINHO_PROCESSED}}/consolidado.csv'
+>>>>>>> e38b1063f839f7f458b092882b80d00957df451e
 INTO TABLE despesas_detalhadas
 CHARACTER SET utf8mb4             
 FIELDS TERMINATED BY ';'
@@ -97,7 +101,11 @@ SET
 
 
 -- IMPORTAÇÃO: Agregadas
+<<<<<<< HEAD
 LOAD DATA LOCAL INFILE '__DATA_PROCESSED__/despesas_agregadas.csv'
+=======
+LOAD DATA LOCAL INFILE '{{CAMINHO_PROCESSED}}/despesas_agregadas.csv'
+>>>>>>> e38b1063f839f7f458b092882b80d00957df451e
 INTO TABLE despesas_agregadas
 CHARACTER SET utf8mb4
 FIELDS TERMINATED BY ';'
