@@ -27,11 +27,7 @@ def get_db_connection():
         host=DB_HOST,
         user=DB_USER,
         password=DB_PASSWORD,
-        allow_local_infile=True,
-        autocommit=True
-    )
-
-def split_sql_statements(text):
+        database=DB_NAME,
     commands = []
     current_char_list = []
     in_quote = None  # Pode ser ' ou "
@@ -85,6 +81,13 @@ def clean_comments(content):
         cleaned_lines.append(line) # Mantém a linha original (com indentação)
     return "\n".join(cleaned_lines)
 
+# MELHORIA: questoes_teste movido para fora de execute_sql_file (era dado de negócio dentro de função de infraestrutura)
+QUESTOES_TESTE = [
+    "Quais as 5 operadoras com maior crescimento percentual de despesas entre o primeiro e o último trimestre analisado?  ",
+    "Qual a distribuição de despesas por UF? Liste os 5 estados com maiores despesas totais.",
+    "Quantas operadoras tiveram despesas acima da média geral em pelo menos 2 dos 3 trimestres analisados?"
+]
+
 def execute_sql_file(cursor, filename):
     filepath = os.path.join(SQL_DIR, filename)
     print(f"Lendo arquivo: {filename}...")
@@ -96,6 +99,12 @@ def execute_sql_file(cursor, filename):
         with open(filepath, 'r', encoding='latin1') as f:
             raw_content = f.read()
 
+    # MELHORIA: substituição dinâmica de caminhos — elimina paths hardcoded no SQL
+    data_raw = os.path.join(PROJECT_ROOT, "data", "raw").replace('\\', '/')
+    data_processed = os.path.join(PROJECT_ROOT, "data", "processed").replace('\\', '/')
+    raw_content = raw_content.replace('__DATA_RAW__', data_raw)
+    raw_content = raw_content.replace('__DATA_PROCESSED__', data_processed)
+
     # Limpa comentários de linha inteira
     clean_content = clean_comments(raw_content)
 
@@ -103,11 +112,6 @@ def execute_sql_file(cursor, filename):
     commands = split_sql_statements(clean_content)
     
     print(f"   -> Encontrados {len(commands)} comandos.")
-    questoes_teste = [
-    "Quais as 5 operadoras com maior crescimento percentual de despesas entre o primeiro e o último trimestre analisado?  ",
-    "Qual a distribuição de despesas por UF? Liste os 5 estados com maiores despesas totais.",
-    "Quantas operadoras tiveram despesas acima da média geral em pelo menos 2 dos 3 trimestres analisados?" 
-]
     contador_pergunta = 0
     #
     for command in commands:
@@ -121,8 +125,8 @@ def execute_sql_file(cursor, filename):
             # Se for SELECT ou WITH, mostra resultado
             if command.upper().startswith("SELECT") or command.upper().startswith("WITH"):
         # Tenta pegar a pergunta da lista, se acabar usa um título padrão
-                if contador_pergunta < len(questoes_teste):
-                    titulo = questoes_teste[contador_pergunta]
+                if contador_pergunta < len(QUESTOES_TESTE):
+                    titulo = QUESTOES_TESTE[contador_pergunta]
                 else:
                     titulo = f"Resultado da Query Extra {contador_pergunta + 1}:"
                 

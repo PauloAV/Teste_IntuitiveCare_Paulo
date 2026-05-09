@@ -24,7 +24,7 @@ const fetchOperadoras = async (page = 1) => {
         operadoras.value = res.data.data;
         meta.value = res.data.meta;
     } catch (err) {
-        console.error("Erro API:", err);
+        alert("Erro ao carregar dados. Tente novamente.");
     } finally {
         loading.value = false;
     }
@@ -46,7 +46,7 @@ const fetchChart = async () => {
             };
         }
     } catch (err) {
-        console.error("Erro Gráfico:", err);
+        alert("Erro ao carregar gráfico. Tente novamente.");
     }
 };
 
@@ -76,7 +76,7 @@ onMounted(() => {
         </div>
 
         <div class="controls">
-            <input v-model="search" type="text" placeholder="🔍 Buscar Operadora por Nome ou CNPJ..." />
+            <input v-model="search" type="text" placeholder="🔍 Buscar Operadora por Nome..." />
         </div>
 
         <div class="table-responsive card-box" v-if="!loading">

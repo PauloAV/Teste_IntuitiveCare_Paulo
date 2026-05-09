@@ -1,6 +1,7 @@
 import mysql.connector
 import os
 from dotenv import load_dotenv
+from fastapi import HTTPException
 
 load_dotenv()
 
@@ -15,5 +16,5 @@ def get_database_connection():
         )
         return connection
     except mysql.connector.Error as err:
-        print(f"Error: {err}")
-        return None
+        # BUG CORRIGIDO: antes retornava None, causando AttributeError em todos os endpoints
+        raise HTTPException(status_code=503, detail=f"Falha na conexão com o banco de dados: {err}")

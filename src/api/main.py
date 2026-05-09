@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from src.api.database_utils import get_database_connection
 from typing import List, Optional
 from pydantic import BaseModel
+import os
 
 
 app = FastAPI(
@@ -11,12 +12,14 @@ app = FastAPI(
     version='1.0.0'
 )
 
+ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "http://127.0.0.1:3000").split(",")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=ALLOWED_ORIGINS,
+    allow_credentials=False,
+    allow_methods=["GET", "POST"],
+    allow_headers=["Content-Type"],
 )
 # Definição dos modelos de dados
 class Endereco(BaseModel):
@@ -34,7 +37,7 @@ class OperadoraSimples(BaseModel):
 
 class OperadoraDetalhada(OperadoraSimples):
     nome_fantasia: Optional[str] = None
-    rpresentante: Optional[str] = None
+    representante: Optional[str] = None  # BUG CORRIGIDO: era 'rpresentante' (typo) — campo nunca era populado
     telefone: Optional[str] = None
     endereco: Optional[Endereco] = None
 
@@ -77,7 +80,7 @@ def read_root():
 
 def listar_operadoras(
     page: int = Query(1, ge=1),
-    limit: int = Query(10, ge=1, le=2000),
+    limit: int = Query(10, ge=1, le=100),  # BUG CORRIGIDO: máximo reduzido de 2000 → 100 para proteção de performance
     termo: str = Query('', description='Filtro por Razão Social')
 ):
     conn = get_database_connection()
@@ -85,23 +88,24 @@ def listar_operadoras(
     offset = (page - 1) * limit
 
     # contagem
-    cursor.execute(' SELECT COUNT(*) AS total FROM operadoras WHERE razao_social LIKE %s', (f'%{termo}%',))
+    escaped_termo = termo.replace('\\', '\\\\').replace('%', '\\%').replace('_', '\\_')
+    cursor.execute('SELECT COUNT(*) AS total FROM operadoras WHERE razao_social LIKE %s ESCAPE \'\\\'', (f'%{escaped_termo}%',))
     total = cursor.fetchone()['total']
 
     #busca
     query = '''
         SELECT registro_ans, cnpj, razao_social, modalidade
         FROM operadoras
-        WHERE razao_social LIKE %s
+        WHERE razao_social LIKE %s ESCAPE '\\'
         ORDER BY razao_social
         LIMIT %s OFFSET %s
     '''
-    cursor.execute(query, (f'%{termo}%', limit, offset))
+    cursor.execute(query, (f'%{escaped_termo}%', limit, offset))
     resultados = cursor.fetchall()
     cursor.close()
     conn.close()
 
-    return{
+    return {
         'data': resultados,
         'meta': {
             'total': total,
@@ -114,7 +118,7 @@ def listar_operadoras(
 # detalhes da operadora
 @app.get('/api/operadoras/{cnpj}', response_model=OperadoraDetalhada)
 
-def detalhes_operadora(cnpj: str = Path(..., description='CNPJ apenas números')):
+def detalhes_operadora(cnpj: str = Path(..., regex=r'^\d{14}$', description='CNPJ (14 dígitos, apenas números)')):
     conn = get_database_connection()
     cursor = conn.cursor(dictionary=True)
 

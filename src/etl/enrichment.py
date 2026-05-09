@@ -1,5 +1,4 @@
 import pandas as pd
-import numpy as np
 import os
 import re
 
@@ -110,8 +109,8 @@ def executar_pipeline_completo():
 
     # 4. SALVAR O CONSOLIDADO ENRIQUECIDO 
     print(f'[INFO] Sobrescrevendo {ARQUIVO_CONSOLIDADO} com colunas adicionadas...')
-    # Salvamos em latin1 conforme solicitado
-    df_enriquecido.to_csv(ARQUIVO_CONSOLIDADO, index=False, sep=';', encoding='latin1', float_format='%.2f', errors='replace')
+    # Salvamos em UTF-8 para consistência com o banco de dados
+    df_enriquecido.to_csv(ARQUIVO_CONSOLIDADO, index=False, sep=';', encoding='utf-8-sig', float_format='%.2f', errors='strict')
 
     # 5. AGREGACAO E ESTATISTICA
     # Gera o arquivo despesas_agregadas.csv a partir do consolidado ja enriquecido
@@ -135,7 +134,7 @@ def executar_pipeline_completo():
 
     # SALVA ARQUIVO AGREGADO
     print(f'[INFO] Salvando {ARQUIVO_AGREGADO}...')
-    df_agg.to_csv(ARQUIVO_AGREGADO, index=False, sep=';', encoding='latin1', float_format='%.2f', errors='replace')
+    df_agg.to_csv(ARQUIVO_AGREGADO, index=False, sep=';', encoding='utf-8-sig', float_format='%.2f', errors='strict')
     
     print('------------------------------')
     print('[SUCESSO] Processo concluido.')

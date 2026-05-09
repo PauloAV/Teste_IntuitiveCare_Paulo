@@ -19,7 +19,6 @@ onMounted(async () => {
         operadora.value = opRes.data;
         historico.value = histRes.data;
     } catch (err) {
-        console.error(err);
         alert("Erro ao carregar dados.");
     } finally {
         loading.value = false;

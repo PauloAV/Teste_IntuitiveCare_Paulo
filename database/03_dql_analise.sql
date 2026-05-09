@@ -46,7 +46,7 @@ SELECT
     AVG(total_despesas) AS media_por_operadora,
     COUNT(DISTINCT registro_ans) AS qtd_operadoras
 FROM despesas_agregadas
-WHERE uf <> 'ND'
+WHERE uf <> 'ND' AND uf IS NOT NULL
 GROUP BY uf
 ORDER BY total_despesas_estado DESC
 LIMIT 5;

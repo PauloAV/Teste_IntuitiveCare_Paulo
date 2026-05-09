@@ -21,7 +21,8 @@ def obter_trimestres_recentes() -> list[str]:
         trimestre_num = (data_ref.month - 1) // 3 + 1
         periodo = f'{ano}/{trimestre_num}T'
 
-        if trimestre_num not in trimestres:
+        # BUG CORRIGIDO: comparava int (trimestre_num) com list[str] → condição sempre True → duplicatas
+        if periodo not in trimestres:
             trimestres.append(periodo)
 
         data_ref -= timedelta(days=90)

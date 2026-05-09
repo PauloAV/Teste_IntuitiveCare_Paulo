@@ -1,5 +1,5 @@
 import { createApp } from 'vue'
-import './style.css' // Se der erro de novo, apaga essa linha
+import './style.css' // Global styles
 import App from './App.vue'
 import router from './router'
 
